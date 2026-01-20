@@ -40,7 +40,7 @@ The output JAR will be in `build/libs/`.
 - Volatile fields ensure visibility across threads
 
 ## License
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+This project is licensed under the GPL-3.0 License. See [LICENSE](LICENSE) for details.
 
 ## Credits
 - Inspired by performance metrics in PC gaming
