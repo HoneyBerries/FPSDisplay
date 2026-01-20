@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public final class FPSStats {
     // Rolling window size for FPS stats (in nanoseconds)
-    private static final long WINDOW_NS = 5_000_000_000L;          // 5 seconds
+    private static final long WINDOW_NS = 2_000_000_000L;          // 5 seconds
     // How often to update the displayed stats (in nanoseconds)
     private static final long UPDATE_INTERVAL_NS = 500_000_000L;   // 0.5 seconds
     // Maximum number of frame timestamps to keep (ring buffer size)

@@ -8,18 +8,21 @@
 		"HoneyBerries"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://honeyberries.net/",
+		"sources": "https://github.com/HoneyBerries/FPSDisplay"
 	},
-	"license": "CC0-1.0",
+	"license": "GPL-3.0",
 	"icon": "assets/fpsdisplay/icon.png",
-	"environment": "*",
+	"environment": "client",
 	"entrypoints": {
 		"main": [
 			"net.honeyberries.FPSDisplay"
 		],
 		"client": [
 			"net.honeyberries.FPSDisplayClient"
+		],
+		"modmenu": [
+			"net.honeyberries.FPSDisplayModMenu"
 		]
 	},
 	"mixins": [
@@ -33,6 +36,16 @@
 		"fabricloader": ">=0.18.4",
 		"minecraft": "~1.21.11",
 		"java": ">=21",
-		"fabric-api": "*"
+		"fabric-api": "*",
+		"modmenu": "*"
+	},
+
+	"custom": {
+		"modmenu": {
+			"links": {
+			  	"modmenu.discord": "https://discord.gg/TbkHCshxjS"
+			},
+			"update_checker": true
+		}
 	}
 }

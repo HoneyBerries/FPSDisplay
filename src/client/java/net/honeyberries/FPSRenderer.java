@@ -14,8 +14,14 @@ public final class FPSRenderer {
 
         if (!client.debugEntries.isOverlayVisible()) {
             int color = 0xFFFFFFFF;
-            context.drawString(client.font, FPSStats.getDisplayStringAvg(), 2, 2, color, true);
-            context.drawString(client.font, FPSStats.getDisplayStringLows(), 2, 12, color, true);
+
+            context.pose().pushMatrix();
+            context.pose().scale(1.0f);
+
+            context.drawString(client.font, FPSStats.getDisplayStringAvg(), 1, 1, color, true);
+            context.drawString(client.font, FPSStats.getDisplayStringLows(), 1, 10, color, true);
+
+            context.pose().popMatrix();
         }
     }
 }
