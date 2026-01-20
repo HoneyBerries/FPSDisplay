@@ -14,8 +14,8 @@ public class FPSDisplayClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		// This entrypoint is suitable for setting up client-specific logic, such as rendering.
 		FPSDisplay.LOGGER.info("FPS Display Mod Initialized");
-		HudElementRegistry.attachElementAfter(VanillaHudElements.CHAT,
-				Identifier.fromNamespaceAndPath(FPSDisplay.MOD_ID, "before_chat"),
+		HudElementRegistry.attachElementBefore(VanillaHudElements.HOTBAR,
+				Identifier.fromNamespaceAndPath(FPSDisplay.MOD_ID, "FPS Data"),
 				FPSDisplayClient::renderFPSHud
 		);
 	}
@@ -24,12 +24,23 @@ public class FPSDisplayClient implements ClientModInitializer {
 		Minecraft client = Minecraft.getInstance();
 
 		int color = 0xFFFFFFFF; // White
-		double currentTime = (double) Util.getMillis() / 1000; // Time in seconds
+        long frameTimeNs = client.getFrameTimeNs();
 
 		if (!client.debugEntries.isOverlayVisible()) {
-			int howRichUAre = client.getFps();
+			double fps = 1_000_000_000.0 / frameTimeNs;
 
-			context.drawString(client.font, "FPS: " + howRichUAre, 2, 2, color, true);
+			context.drawString(
+					client.font,
+					"FPS: %.0f".formatted(fps),
+					2, 2, color, true
+			);
+
+			context.drawString(
+					client.font,
+					"FrameTime (ms): %.1f".formatted(frameTimeNs / 1_000_000.0),
+					2, 12, color, true
+			);
+
 		}
 	}
 }
