@@ -36,7 +36,7 @@ public class FPSConfig {
         /**
          * Default value: Enable advanced statistics (1% and 0.1% lows).
          */
-        private static final boolean DEF_ENABLE_ADVANCED = true;
+        private static final boolean DEF_ENABLE_ADVANCED = false;
 
 
         /**
@@ -161,23 +161,23 @@ public class FPSConfig {
             .category(ConfigCategory.createBuilder()
                 .name(Component.literal("General"))
                 .group(OptionGroup.createBuilder()
-                    .name(Component.literal("HUD Data"))
-                    .option(buildBool("Enable FPS", "Show basic FPS counter", () -> Handler.DEF_ENABLE, () -> INSTANCE.enableFps, val -> INSTANCE.enableFps = val))
+                    .name(Component.literal("HUD"))
+                    .option(buildBool("Enable HUD", "Enables the FPS Display", () -> Handler.DEF_ENABLE, () -> INSTANCE.enableFps, val -> INSTANCE.enableFps = val))
                     .option(buildBool("Advanced Stats", "Show 1% and 0.1% lows", () -> Handler.DEF_ENABLE_ADVANCED, () -> INSTANCE.enableAdvancedStats, val -> INSTANCE.enableAdvancedStats = val))
-                    .option(buildBool("Show 'FPS' Text", "Show 'FPS' text before the numerical value", () -> Handler.DEF_SHOW_FPS_TEXT, () -> INSTANCE.showFpsText, val -> INSTANCE.showFpsText = val))
+                    .option(buildBool("Show 'FPS' Text", "Show the 'FPS' text before the numerical value", () -> Handler.DEF_SHOW_FPS_TEXT, () -> INSTANCE.showFpsText, val -> INSTANCE.showFpsText = val))
                     .build())
                 .group(OptionGroup.createBuilder()
                     .name(Component.literal("Positioning"))
-                    .option(buildIntSlider("X Offset", 0, maxX, () -> Handler.DEF_X, () -> INSTANCE.xOffset, val -> INSTANCE.xOffset = val))
-                    .option(buildIntSlider("Y Offset", 0, maxY, () -> Handler.DEF_Y, () -> INSTANCE.yOffset, val -> INSTANCE.yOffset = val))
+                    .option(buildIntSlider("X Offset", "Controls the X Offset from the left", 0, maxX, () -> Handler.DEF_X, () -> INSTANCE.xOffset, val -> INSTANCE.xOffset = val))
+                    .option(buildIntSlider("Y Offset", "Controls the Y Offset from the top", 0, maxY, () -> Handler.DEF_Y, () -> INSTANCE.yOffset, val -> INSTANCE.yOffset = val))
                     .build())
                 .build())
             .category(ConfigCategory.createBuilder()
                 .name(Component.literal("Appearance"))
-                .option(buildFloatSlider("HUD Scale", 0.5f, 3.0f, () -> Handler.DEF_SCALE, () -> INSTANCE.hudScale, val -> INSTANCE.hudScale = val))
-                .option(buildBool("Text Shadow", "Render a shadow behind text", () -> Handler.DEF_ENABLE_SHADOW, () -> INSTANCE.enableShadow, val -> INSTANCE.enableShadow = val))
-                .option(buildColor("Text Color", () -> Handler.DEF_TEXT_COLOR, () -> INSTANCE.hudColor, val -> INSTANCE.hudColor = val))
-                .option(buildColor("Background Color", () -> Handler.DEF_BG_COLOR, () -> INSTANCE.bgColor, val -> INSTANCE.bgColor = val))
+                .option(buildFloatSlider("HUD Scale", "The scale of the HUD elements, including the background ", 0.5f, 3.0f, () -> Handler.DEF_SCALE, () -> INSTANCE.hudScale, val -> INSTANCE.hudScale = val))
+                .option(buildBool("Text Shadow", "Renders a shadow behind text", () -> Handler.DEF_ENABLE_SHADOW, () -> INSTANCE.enableShadow, val -> INSTANCE.enableShadow = val))
+                .option(buildColor("Text Color", "Color for the text", () -> Handler.DEF_TEXT_COLOR, () -> INSTANCE.hudColor, val -> INSTANCE.hudColor = val))
+                .option(buildColor("Background Color", "Color for the background", () -> Handler.DEF_BG_COLOR, () -> INSTANCE.bgColor, val -> INSTANCE.bgColor = val))
                 .build())
             .build()
             .generateScreen(parent);
@@ -193,9 +193,10 @@ public class FPSConfig {
      * @param set Consumer to update the value
      * @return A configured Color option for YACL3
      */
-    private static Option<Color> buildColor(String name, Supplier<Integer> def, Supplier<Integer> get, Consumer<Integer> set) {
+    private static Option<Color> buildColor(String name, String desc, Supplier<Integer> def, Supplier<Integer> get, Consumer<Integer> set) {
         return Option.<Color>createBuilder()
             .name(Component.literal(name))
+            .description(OptionDescription.of(Component.literal(desc)))
             .binding(new Color(def.get(), true), () -> new Color(get.get(), true), val -> set.accept(val.getRGB()))
             .controller(opt -> ColorControllerBuilder.create(opt).allowAlpha(true))
             .build();
@@ -231,9 +232,10 @@ public class FPSConfig {
      * @param set Consumer to update the value
      * @return A configured Integer option for YACL3 with slider controller
      */
-    private static Option<Integer> buildIntSlider(String name, int min, int max, Supplier<Integer> def, Supplier<Integer> get, Consumer<Integer> set) {
+    private static Option<Integer> buildIntSlider(String name, String description, int min, int max, Supplier<Integer> def, Supplier<Integer> get, Consumer<Integer> set) {
         return Option.<Integer>createBuilder()
             .name(Component.literal(name))
+            .description(OptionDescription.of(Component.literal(description)))
             .binding(def.get(), get, set)
             .controller(opt -> IntegerSliderControllerBuilder.create(opt).range(min, max).step(1))
             .build();
@@ -250,9 +252,10 @@ public class FPSConfig {
      * @param set Consumer to update the value
      * @return A configured Float option for YACL3 with slider controller
      */
-    private static Option<Float> buildFloatSlider(String name, float min, float max, Supplier<Float> def, Supplier<Float> get, Consumer<Float> set) {
+    private static Option<Float> buildFloatSlider(String name, String description, float min, float max, Supplier<Float> def, Supplier<Float> get, Consumer<Float> set) {
         return Option.<Float>createBuilder()
             .name(Component.literal(name))
+            .description(OptionDescription.of(Component.literal(description)))
             .binding(def.get(), get, set)
             .controller(opt -> FloatSliderControllerBuilder.create(opt).range(min, max).step(0.1f))
             .build();
