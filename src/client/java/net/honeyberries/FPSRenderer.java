@@ -4,9 +4,35 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 
+/**
+ * Handles rendering of the FPS display HUD element on screen.
+ * This class is responsible for drawing the FPS counter with customizable
+ * position, scale, colors, and advanced statistics based on configuration.
+ */
 public final class FPSRenderer {
+    /**
+     * Private constructor to prevent instantiation.
+     * This is a utility class with only static methods.
+     */
     private FPSRenderer() {}
 
+    /**
+     * Renders the FPS display on the screen.
+     * Called every frame by the HUD rendering system.
+     * <p>
+     * This method:
+     * 1. Checks if FPS display is enabled in config
+     * 2. Records frame timing for statistics
+     * 3. Respects F3 debug overlay and hidden GUI settings
+     * 4. Draws background box (if configured with visible alpha)
+     * 5. Draws FPS text with shadow (if enabled)
+     * 6. Draws advanced statistics (if enabled)
+     * <p>
+     * All positioning, scaling, and colors are controlled by FPSConfig.INSTANCE.
+     *
+     * @param context The GuiGraphics context for rendering
+     * @param delta Delta tracker for frame timing (unused in current implementation)
+     */
     public static void render(GuiGraphics context, DeltaTracker delta) {
         Minecraft client = Minecraft.getInstance();
 
