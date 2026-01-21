@@ -42,16 +42,17 @@ public final class FPSRenderer {
         // Record stats
         FPSStats.recordFrame(System.nanoTime());
 
+        boolean showFpsText = FPSConfig.INSTANCE.showFpsText;
+
         // Respect F3 and other debug overlays
         if (!client.debugEntries.isOverlayVisible() && !client.options.hideGui) {
             context.pose().pushMatrix();
 
             // 1. Position and Scale using Singleton values
-            // Note: Use translate(x, y, z) for clarity
             context.pose().translate(FPSConfig.INSTANCE.xOffset, FPSConfig.INSTANCE.yOffset);
             context.pose().scale(FPSConfig.INSTANCE.hudScale);
 
-            String avgText = FPSStats.getDisplayStringAvg();
+            String avgText = FPSStats.getDisplayStringAvg(showFpsText);
             String lowsText = FPSStats.getDisplayStringLows();
 
             // 2. Calculate Dynamic Dimensions

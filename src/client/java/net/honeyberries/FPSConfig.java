@@ -2,6 +2,7 @@ package net.honeyberries;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mojang.blaze3d.platform.Window;
 import dev.isxander.yacl3.api.*;
 import dev.isxander.yacl3.api.controller.*;
 import net.minecraft.client.Minecraft;
@@ -18,7 +19,7 @@ import java.util.function.Supplier;
 /**
  * Configuration manager for the FPS Display mod.
  * Handles loading, saving, and providing a GUI configuration screen using YACL3.
- *
+ * <p>
  * Configuration is persisted to disk as JSON and accessed via the singleton INSTANCE.
  */
 public class FPSConfig {
@@ -36,6 +37,12 @@ public class FPSConfig {
          * Default value: Enable advanced statistics (1% and 0.1% lows).
          */
         private static final boolean DEF_ENABLE_ADVANCED = true;
+
+
+        /**
+         * Default value: Show the "FPS" text before the numerical value.
+         */
+        private static final boolean DEF_SHOW_FPS_TEXT = true;
 
         /**
          * Default value: Enable text shadow rendering.
@@ -76,6 +83,11 @@ public class FPSConfig {
          * Whether to show advanced statistics (1% and 0.1% low FPS).
          */
         public boolean enableAdvancedStats = DEF_ENABLE_ADVANCED;
+
+        /**
+         * Whether to show the "FPS" text before the numerical value.
+         */
+        public boolean showFpsText = DEF_SHOW_FPS_TEXT;
 
         /**
          * Whether to render a shadow behind the text.
@@ -126,17 +138,23 @@ public class FPSConfig {
 
     /**
      * Creates the configuration screen GUI using YACL3 (Yet Another Config Lib).
-     *
+     * <p>
      * The screen includes:
      * - General category: Toggle FPS display, advanced stats, and positioning
      * - Appearance category: Scale, colors, and text shadow
-     *
+     * <p>
      * All changes are bound to the INSTANCE and saved when the screen is closed.
      *
      * @param parent The parent screen to return to when closing the config screen
      * @return A Screen instance showing the configuration GUI
      */
     public static Screen createConfigScreen(Screen parent) {
+
+        // Make sure that scaling is consistent
+        Window window = Minecraft.getInstance().getWindow();
+        int maxX = window.getGuiScaledWidth();
+        int maxY = window.getGuiScaledHeight();
+
         return YetAnotherConfigLib.createBuilder()
             .title(Component.literal("FPS Display Settings"))
             .save(FPSConfig::save)
@@ -146,11 +164,12 @@ public class FPSConfig {
                     .name(Component.literal("HUD Data"))
                     .option(buildBool("Enable FPS", "Show basic FPS counter", () -> Handler.DEF_ENABLE, () -> INSTANCE.enableFps, val -> INSTANCE.enableFps = val))
                     .option(buildBool("Advanced Stats", "Show 1% and 0.1% lows", () -> Handler.DEF_ENABLE_ADVANCED, () -> INSTANCE.enableAdvancedStats, val -> INSTANCE.enableAdvancedStats = val))
+                    .option(buildBool("Show 'FPS' Text", "Show 'FPS' text before the numerical value", () -> Handler.DEF_SHOW_FPS_TEXT, () -> INSTANCE.showFpsText, val -> INSTANCE.showFpsText = val))
                     .build())
                 .group(OptionGroup.createBuilder()
                     .name(Component.literal("Positioning"))
-                    .option(buildIntSlider("X Offset", 0, 400, () -> Handler.DEF_X, () -> INSTANCE.xOffset, val -> INSTANCE.xOffset = val))
-                    .option(buildIntSlider("Y Offset", 0, 300, () -> Handler.DEF_Y, () -> INSTANCE.yOffset, val -> INSTANCE.yOffset = val))
+                    .option(buildIntSlider("X Offset", 0, maxX, () -> Handler.DEF_X, () -> INSTANCE.xOffset, val -> INSTANCE.xOffset = val))
+                    .option(buildIntSlider("Y Offset", 0, maxY, () -> Handler.DEF_Y, () -> INSTANCE.yOffset, val -> INSTANCE.yOffset = val))
                     .build())
                 .build())
             .category(ConfigCategory.createBuilder()
@@ -247,7 +266,9 @@ public class FPSConfig {
     public static void save() {
         try (FileWriter writer = new FileWriter(CONFIG_FILE)) {
             GSON.toJson(INSTANCE, writer); // Save the entire instance at once
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            FPSDisplay.LOGGER.error("Failed to save FPS Display configuration", e);
+        }
     }
 
     /**
@@ -263,6 +284,8 @@ public class FPSConfig {
         try (FileReader reader = new FileReader(CONFIG_FILE)) {
             Handler loaded = GSON.fromJson(reader, Handler.class);
             if (loaded != null) INSTANCE = loaded; // Replace the whole instance
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            FPSDisplay.LOGGER.error("Failed to load FPS Display configuration", e);
+        }
     }
 }

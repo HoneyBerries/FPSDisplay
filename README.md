@@ -32,18 +32,19 @@ A lightweight, highly customizable Minecraft Fabric mod that displays real-time 
 ## 📦 Installation
 
 ### Requirements
-- **Minecraft**: 1.21.11+
-- **Fabric Loader**: Latest version recommended
-- **Fabric API**: Required dependency
-- **YACL (Yet Another Config Lib)**: Required for configuration GUI
-- **ModMenu**: Required, for config access
+- **Minecraft**: 1.21.11 (exact version)
+- **Fabric Loader**: 0.18.4 or newer
+- **Java**: 21 or newer
+- **Fabric API**: Latest version for 1.21.11
+- **YACL3 (Yet Another Config Lib)**: 3.8.2+1.21.11-fabric or newer (required for configuration GUI)
+- **ModMenu**: Latest version for 1.21.11 (required for config access)
 
 ### Steps
-1. Install [Fabric Loader](https://fabricmc.net/use/) for Minecraft 1.21.11
+1. Install [Fabric Loader](https://fabricmc.net/use/) (0.18.4+) for Minecraft 1.21.11
 2. Download [Fabric API](https://modrinth.com/mod/fabric-api) and place in your `mods` folder
-3. Download [YACL3](https://modrinth.com/mod/yacl) and place in your `mods` folder
-4. Download [ModMenu](https://modrinth.com/mod/modmenu) for easy configuration access
-5. Download the latest FPS Display release and place all 3 `.jar's` in your `mods` folder
+3. Download [YACL3](https://modrinth.com/mod/yacl) (3.8.2+ for 1.21.11) and place in your `mods` folder
+4. Download [ModMenu](https://modrinth.com/mod/modmenu) and place in your `mods` folder
+5. Download the latest FPS Display release and place in your `mods` folder
 6. Launch Minecraft
 
 ## 🎮 Usage
@@ -56,15 +57,18 @@ FPS: 144
 ```
 
 ### Configuration
-Access the configuration screen through:
-- **ModMenu**: Click "Mods" → Find "FPS Display" → Click the config button
-- **In-game command** (if implemented): `/fpsdisplay config`
+Access the configuration screen through **ModMenu**:
+1. Open the Minecraft main menu or pause menu
+2. Click "Mods" button
+3. Find "FPS Display" in the mod list
+4. Click the config button (gear icon) next to the mod name
 
 #### General Settings
 - **Enable FPS**: Toggle the entire FPS display on/off
 - **Advanced Stats**: Show/hide 1% and 0.1% low FPS values
-- **X Offset**: Horizontal position (0-400 pixels)
-- **Y Offset**: Vertical position (0-300 pixels)
+- **Show 'FPS' Text**: Toggle the "FPS:" label before the numerical value
+- **X Offset**: Horizontal position (adjustable based on your screen resolution)
+- **Y Offset**: Vertical position (adjustable based on your screen resolution)
 
 #### Appearance Settings
 - **HUD Scale**: Size multiplier (0.5x - 3.0x)

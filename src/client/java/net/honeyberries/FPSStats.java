@@ -103,12 +103,16 @@ public final class FPSStats {
 
     /**
      * Gets a formatted string displaying the average FPS.
-     * The string is formatted on demand to avoid storing stale text.
+     * If `showFpsText` is true, the string is formatted as "FPS: XX".
+     * If `showFpsText` is false, only the numeric value is shown.
      *
-     * @return A string in the format "FPS: XX" where XX is the average FPS rounded to nearest integer
+     * @param showFpsText Whether to include the "FPS:" label in the output
+     * @return A string in the format "FPS: XX" or "XX" where XX is the average FPS rounded to the nearest integer
      */
-    public static String getDisplayStringAvg() {
-        return String.format("FPS: %.0f", avgFps);
+    public static String getDisplayStringAvg(boolean showFpsText) {
+        return showFpsText
+                ? String.format("FPS: %.0f", avgFps)
+                : String.format("%.0f", avgFps);
     }
 
     /**
