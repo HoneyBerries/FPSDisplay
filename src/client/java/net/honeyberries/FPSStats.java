@@ -13,10 +13,10 @@ import java.util.Arrays;
  */
 public final class FPSStats {
     /**
-     * Rolling window size for FPS statistics in nanoseconds (2 seconds).
+     * Rolling window size for FPS statistics in nanoseconds (5 seconds).
      * Only frames within this time window are included in calculations.
      */
-    private static final long WINDOW_NS = 2_000_000_000L;
+    private static final long WINDOW_NS = 5_000_000_000L;
 
     /**
      * How often to update the displayed statistics in nanoseconds (0.5 seconds).
