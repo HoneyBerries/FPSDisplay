@@ -3,6 +3,9 @@ package net.honeyberries;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.LevelLoadingScreen;
+
+import java.util.Objects;
 
 /**
  * Handles rendering of the FPS display HUD element on screen.
@@ -45,7 +48,7 @@ public final class FPSRenderer {
         boolean showFpsText = FPSConfig.INSTANCE.showFpsText;
 
         // Respect F3 and other debug overlays
-        if (!client.debugEntries.isOverlayVisible() && !client.options.hideGui) {
+        if (shouldShowHUD()) {
             context.pose().pushMatrix();
 
             // 1. Position and Scale using Singleton values
@@ -83,5 +86,23 @@ public final class FPSRenderer {
 
             context.pose().popMatrix();
         }
+    }
+
+    /** Determines whether the FPS HUD should be rendered based on game state and settings.
+     * This method checks:
+     <p> 1. If the current screen is a LevelLoadingScreen (don't show HUD during loading)
+     <p> 2. If the player's GUI is hidden (don't show HUD if GUI is hidden)
+     <p> 3. If the debug overlay is active (don't show HUD when the F3 debug screen is open)
+     *
+     * @return true if the HUD should be shown, false otherwise
+     */
+    public static boolean shouldShowHUD() {
+        Minecraft client = Minecraft.getInstance();
+        // Logic: Don't hide if (F1 is pressed AND I am NOT a spectator)
+        boolean hideGuiCheck = !(client.options.hideGui);
+
+        return !(client.screen instanceof LevelLoadingScreen) &&
+               hideGuiCheck &&
+               !client.getDebugOverlay().showDebugScreen();
     }
 }

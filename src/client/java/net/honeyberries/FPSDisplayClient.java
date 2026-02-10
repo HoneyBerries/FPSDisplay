@@ -18,10 +18,5 @@ public class FPSDisplayClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         FPSConfig.load();
-        HudElementRegistry.attachElementBefore(
-                VanillaHudElements.HOTBAR,
-                Identifier.fromNamespaceAndPath(FPSDisplay.MOD_ID, "fps_data"),
-                FPSRenderer::render
-        );
     }
 }
