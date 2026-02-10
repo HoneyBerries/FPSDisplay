@@ -2,9 +2,11 @@
 
 A lightweight, highly customizable Minecraft Fabric mod that displays real-time FPS statistics directly on your HUD. Track not just average FPS, but also 1% and 0.1% low values for comprehensive performance analysis.
 
-![License](https://img.shields.io/badge/license-GPL--3.0-blue.svg)
-![Minecraft](https://img.shields.io/badge/minecraft-1.21.1-green.svg)
-![Fabric](https://img.shields.io/badge/loader-Fabric-orange.svg)
+![Build](https://img.shields.io/github/actions/workflow/status/HoneyBerries/FPSDisplay/.github/workflows/build.yml?branch=main
+)
+![License](https://img.shields.io/badge/license-GPL--3.0-blue.svg) 
+![Minecraft](https://img.shields.io/badge/Minecraft-1.21.11+-green.svg)
+![Fabric](https://img.shields.io/badge/Loader-Fabric-orange.svg)
 
 ## ✨ Features
 
@@ -151,4 +153,3 @@ This project is licensed under the **GNU General Public License v3.0** - see the
 **Made with ❤️ for the Minecraft community**
 
 *For bug reports, feature requests, or general questions, please open an issue on GitHub.*
-
