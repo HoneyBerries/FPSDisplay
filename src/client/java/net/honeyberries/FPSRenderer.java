@@ -2,8 +2,11 @@ package net.honeyberries;
 
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.LevelLoadingScreen;
+import org.joml.Matrix3x2fStack;
+import org.spongepowered.asm.mixin.Unique;
 
 import java.util.Objects;
 
@@ -36,7 +39,7 @@ public final class FPSRenderer {
      * @param context The GuiGraphics context for rendering
      * @param delta Delta tracker for frame timing (unused in current implementation)
      */
-    public static void render(GuiGraphics context, DeltaTracker delta) {
+    public static void render(GuiGraphicsExtractor context, DeltaTracker delta) {
         Minecraft client = Minecraft.getInstance();
 
         // Use the Singleton Instance for the toggle check
@@ -76,17 +79,43 @@ public final class FPSRenderer {
 
             // 4. Draw Strings using singleton settings
             int textColor = FPSConfig.INSTANCE.hudColor;
+            float scale = FPSConfig.INSTANCE.hudScale;
             boolean useShadow = FPSConfig.INSTANCE.enableShadow;
 
-            context.drawString(client.font, avgText, 0, 0, textColor, useShadow);
+            renderText(context, client.font, avgText, 0, 0, textColor, scale, useShadow);
 
             if (FPSConfig.INSTANCE.enableAdvancedStats) {
-                context.drawString(client.font, lowsText, 0, 10, textColor, useShadow);
+                renderText(context, client.font, lowsText, 0, 10, textColor, scale, useShadow);
             }
 
             context.pose().popMatrix();
         }
     }
+
+
+    /**
+     * Renders a text string with specified properties onto the GUI graphics context.
+     *
+     * This method supports optional scaling and shadow rendering. When scaling is applied,
+     * the rendering coordinates are adjusted to account for the transformation.
+     *
+     * @param graphics The graphics context used for rendering the text*/
+    @Unique
+    private static void renderText(GuiGraphicsExtractor graphics, Font textRenderer, String text, int x, int y, int color, float scale, boolean shadowed) {
+        if (scale != 1.0f) {
+            Matrix3x2fStack matrixStack = graphics.pose();
+            matrixStack.pushMatrix();
+            matrixStack.translate(x, y);
+            matrixStack.scale(scale, scale);
+            matrixStack.translate(-x, -y);
+            graphics.text(textRenderer, text, x, y, color, shadowed);
+            matrixStack.popMatrix();
+        }
+        else {
+            graphics.text(textRenderer, text, x, y, color, shadowed);
+        }
+    }
+
 
     /** Determines whether the FPS HUD should be rendered based on game state and settings.
      * This method checks:

@@ -8,15 +8,10 @@ pluginManagement {
 		gradlePluginPortal()
 	}
 
-	resolutionStrategy {
-		eachPlugin {
-			if (requested.id.id == "net.fabricmc.fabric-loom-remap") {
-				useModule("net.fabricmc:fabric-loom:${providers.gradleProperty("loom_version").get()}")
-			}
-		}
-	}
-
 	plugins {
-		id("net.fabricmc.fabric-loom-remap") version providers.gradleProperty("loom_version").get()
+		id("net.fabricmc.fabric-loom") version providers.gradleProperty("loom_version")
 	}
 }
+
+// Should match your modid
+rootProject.name = "fpsdisplay"

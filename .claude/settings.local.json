@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gradle build *)",
+      "Bash(./gradlew build *)",
+      "Bash(./gradlew genSources)"
+    ]
+  }
+}
