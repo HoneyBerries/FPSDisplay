@@ -37,7 +37,7 @@ public class FPSDisplayClient implements ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (TOGGLE_HUD_KEY.consumeClick()) {
-                FPSConfig.INSTANCE.enableFps = !FPSConfig.INSTANCE.enableFps;
+                FPSConfig.getInstance().enableFps = !FPSConfig.getInstance().enableFps;
                 FPSConfig.save();
             }
         });

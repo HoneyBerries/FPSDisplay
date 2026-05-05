@@ -34,7 +34,7 @@ public final class FPSRenderer {
      * 5. Draws FPS text with shadow (if enabled)
      * 6. Draws advanced statistics (if enabled)
      * <p>
-     * All positioning, scaling, and colors are controlled by FPSConfig.INSTANCE.
+     * All positioning, scaling, and colors are controlled by FPSConfig.getInstance().
      *
      * @param context The GuiGraphics context for rendering
      * @param delta Delta tracker for frame timing (unused in current implementation)
@@ -43,20 +43,20 @@ public final class FPSRenderer {
         Minecraft client = Minecraft.getInstance();
 
         // Use the Singleton Instance for the toggle check
-        if (!FPSConfig.INSTANCE.enableFps) return;
+        if (!FPSConfig.getInstance().enableFps) return;
 
         // Record stats
         FPSStats.recordFrame(System.nanoTime());
 
-        boolean showFpsText = FPSConfig.INSTANCE.showFpsText;
+        boolean showFpsText = FPSConfig.getInstance().showFpsText;
 
         // Respect F3 and other debug overlays
         if (shouldShowHUD()) {
             context.pose().pushMatrix();
 
             // 1. Position and Scale using Singleton values
-            context.pose().translate(FPSConfig.INSTANCE.xOffset, FPSConfig.INSTANCE.yOffset);
-            context.pose().scale(FPSConfig.INSTANCE.hudScale);
+            context.pose().translate(FPSConfig.getInstance().xOffset, FPSConfig.getInstance().yOffset);
+            context.pose().scale(FPSConfig.getInstance().hudScale);
 
             String avgText = FPSStats.getDisplayStringAvg(showFpsText);
             String lowsText = FPSStats.getDisplayStringLows();
@@ -65,26 +65,26 @@ public final class FPSRenderer {
             int maxWidth = client.font.width(avgText);
             int totalHeight = 10;
 
-            if (FPSConfig.INSTANCE.enableAdvancedStats) {
+            if (FPSConfig.getInstance().enableAdvancedStats) {
                 maxWidth = Math.max(maxWidth, client.font.width(lowsText));
                 totalHeight += 10;
             }
 
             // 3. Draw Background Box
             // Extracting alpha from the singleton's bgColor
-            int bgColor = FPSConfig.INSTANCE.bgColor;
+            int bgColor = FPSConfig.getInstance().bgColor;
             if (((bgColor >> 24) & 0xFF) > 0) {
                 context.fill(-2, -2, maxWidth + 2, totalHeight, bgColor);
             }
 
             // 4. Draw Strings using singleton settings
-            int textColor = FPSConfig.INSTANCE.hudColor;
-            float scale = FPSConfig.INSTANCE.hudScale;
-            boolean useShadow = FPSConfig.INSTANCE.enableShadow;
+            int textColor = FPSConfig.getInstance().hudColor;
+            float scale = FPSConfig.getInstance().hudScale;
+            boolean useShadow = FPSConfig.getInstance().enableShadow;
 
             renderText(context, client.font, avgText, 0, 0, textColor, scale, useShadow);
 
-            if (FPSConfig.INSTANCE.enableAdvancedStats) {
+            if (FPSConfig.getInstance().enableAdvancedStats) {
                 renderText(context, client.font, lowsText, 0, 10, textColor, scale, useShadow);
             }
 

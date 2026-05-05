@@ -1,4 +1,38 @@
 {
   "key.fpsdisplay.toggle_hud": "Toggle FPS HUD",
-  "key.category.fpsdisplay.keybinds": "FPS Display Keybinds"
+  "key.category.fpsdisplay.keybinds": "FPS Display Keybinds",
+
+  "config.fpsdisplay.title": "FPS Display Settings",
+
+  "config.fpsdisplay.category.general": "General",
+  "config.fpsdisplay.category.appearance": "Appearance",
+
+  "config.fpsdisplay.group.hud": "HUD",
+  "config.fpsdisplay.enable_fps": "Enable HUD",
+  "config.fpsdisplay.enable_fps.description": "Enables the FPS Display",
+
+  "config.fpsdisplay.enable_advanced_stats": "Advanced Stats",
+  "config.fpsdisplay.enable_advanced_stats.description": "Show 1% and 0.1% lows",
+
+  "config.fpsdisplay.show_fps_text": "Show 'FPS' Text",
+  "config.fpsdisplay.show_fps_text.description": "Show the 'FPS' text before the numerical value",
+
+  "config.fpsdisplay.group.positioning": "Positioning",
+  "config.fpsdisplay.x_offset": "X Offset",
+  "config.fpsdisplay.x_offset.description": "Controls the X Offset from the left",
+
+  "config.fpsdisplay.y_offset": "Y Offset",
+  "config.fpsdisplay.y_offset.description": "Controls the Y Offset from the top",
+
+  "config.fpsdisplay.hud_scale": "HUD Scale",
+  "config.fpsdisplay.hud_scale.description": "The scale of the HUD elements, including the background",
+
+  "config.fpsdisplay.text_shadow": "Text Shadow",
+  "config.fpsdisplay.text_shadow.description": "Renders a shadow behind text",
+
+  "config.fpsdisplay.text_color": "Text Color",
+  "config.fpsdisplay.text_color.description": "Color for the text",
+
+  "config.fpsdisplay.bg_color": "Background Color",
+  "config.fpsdisplay.bg_color.description": "Color for the background"
 }
