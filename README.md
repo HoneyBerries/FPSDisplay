@@ -102,7 +102,7 @@ All settings are saved to `config/fps_display_config.json` and persist across ga
 
 #### Prerequisites
 - Git
-- Java Development Kit (JDK) 21 or newer
+- Java Development Kit (JDK) 25 or newer
 - Gradle (or use the included gradle wrapper)
 
 #### Build Steps
