@@ -12,7 +12,7 @@ A lightweight, highly customizable Minecraft Fabric mod that displays real-time 
 - [Features](#-features)
 - [Installation](#-installation)
 - [Usage](#-usage)
-- [Development](#️-development)
+- [Development](#-development)
 - [Contributing](#-contributing)
 - [License](#-license)
 - [Support & Links](#-support--links)
