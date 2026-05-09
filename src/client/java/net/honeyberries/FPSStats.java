@@ -12,6 +12,21 @@ import java.util.Arrays;
  * All methods are thread-safe and use synchronized access to internal data.
  */
 public final class FPSStats {
+    /** Capacity of the frametime ring buffer for the graph (512 samples). */
+    private static final int GRAPH_CAPACITY = 512;
+
+    /** Ring buffer of recent frametime durations in milliseconds, for graph rendering. */
+    private static final float[] frametimesMs = new float[GRAPH_CAPACITY];
+
+    /** Oldest-sample index in the frametime ring buffer. */
+    private static int ftHead = 0;
+
+    /** Number of valid entries in the frametime ring buffer. */
+    private static int ftSize = 0;
+
+    /** Timestamp of the previous frame in nanoseconds, used to compute deltas. */
+    private static long lastFrameNs = 0;
+
     /**
      * Rolling window size for FPS statistics in nanoseconds (5 seconds).
      * Only frames within this time window are included in calculations.
@@ -91,6 +106,12 @@ public final class FPSStats {
      * @param now Current time in nanoseconds (typically from System.nanoTime())
      */
     public static synchronized void recordFrame(long now) {
+        if (lastFrameNs > 0) {
+            float dtMs = (now - lastFrameNs) / 1_000_000.0f;
+            if (dtMs > 0) addFrametime(dtMs);
+        }
+        lastFrameNs = now;
+
         addTimestamp(now); // Add this frame's timestamp
         removeOlderThan(now - WINDOW_NS); // Remove frames outside the rolling window
 
@@ -99,6 +120,23 @@ public final class FPSStats {
             calculateStats();
             lastUpdateTime = now;
         }
+    }
+
+    /**
+     * Returns a copy of the most recent {@code count} frametime samples (oldest first).
+     * The returned array may be shorter than {@code count} if fewer samples exist.
+     *
+     * @param count Maximum number of samples to return
+     * @return Ordered array of frametime values in milliseconds
+     */
+    public static synchronized float[] getRecentFrametimes(int count) {
+        int n = Math.min(count, ftSize);
+        float[] result = new float[n];
+        int start = (ftHead + ftSize - n + GRAPH_CAPACITY) % GRAPH_CAPACITY;
+        for (int i = 0; i < n; i++) {
+            result[i] = frametimesMs[(start + i) % GRAPH_CAPACITY];
+        }
+        return result;
     }
 
     /**
@@ -126,6 +164,17 @@ public final class FPSStats {
         return String.format("1%% Low: %.0f | 0.1%% Low: %.0f",
                 Math.max(0.0, onePercentFps),
                 Math.max(0.0, pointOnePercentFps));
+    }
+
+    /** Pushes a frametime sample (ms) into the graph ring buffer. */
+    private static synchronized void addFrametime(float ms) {
+        int tail = (ftHead + ftSize) % GRAPH_CAPACITY;
+        frametimesMs[tail] = ms;
+        if (ftSize < GRAPH_CAPACITY) {
+            ftSize++;
+        } else {
+            ftHead = (ftHead + 1) % GRAPH_CAPACITY;
+        }
     }
 
     /**

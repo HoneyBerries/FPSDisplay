@@ -105,6 +105,37 @@ public class FPSDisplayModMenu implements ModMenuApi {
                         () -> FPSConfig.getInstance().yOffset,
                         v -> FPSConfig.getInstance().yOffset = v))
                     .build())
+                .group(OptionGroup.createBuilder()
+                    .name(Component.translatable("config.fpsdisplay.group.frametime_graph"))
+                    .option(createBoolOption(
+                        "config.fpsdisplay.enable_frametime_graph",
+                        FPSConfig.DEF_ENABLE_FRAMETIME_GRAPH,
+                        () -> FPSConfig.getInstance().enableFrametimeGraph,
+                        v -> FPSConfig.getInstance().enableFrametimeGraph = v))
+                    .option(createIntSliderOption(
+                        "config.fpsdisplay.graph_width",
+                        FPSConfig.DEF_GRAPH_WIDTH,
+                        50, 500,
+                        () -> FPSConfig.getInstance().graphWidth,
+                        v -> FPSConfig.getInstance().graphWidth = v))
+                    .option(createIntSliderOption(
+                        "config.fpsdisplay.graph_height",
+                        FPSConfig.DEF_GRAPH_HEIGHT,
+                        10, 120,
+                        () -> FPSConfig.getInstance().graphHeight,
+                        v -> FPSConfig.getInstance().graphHeight = v))
+                    .option(createFloatSliderOption(
+                        "config.fpsdisplay.graph_max_ms",
+                        FPSConfig.DEF_GRAPH_MAX_MS,
+                        5.0f, 200.0f, 0.5f,
+                        () -> FPSConfig.getInstance().graphMaxMs,
+                        v -> FPSConfig.getInstance().graphMaxMs = v))
+                    .option(createColorOption(
+                        "config.fpsdisplay.graph_color",
+                        FPSConfig.DEF_GRAPH_COLOR,
+                        () -> FPSConfig.getInstance().graphColor,
+                        v -> FPSConfig.getInstance().graphColor = v))
+                    .build())
                 .build())
             .category(ConfigCategory.createBuilder()
                 .name(Component.translatable("config.fpsdisplay.category.appearance"))
@@ -194,11 +225,15 @@ public class FPSDisplayModMenu implements ModMenuApi {
      * @return A configured float slider option ready to be added to the config screen
      */
     private static Option<Float> createFloatSliderOption(String nameKey, float defaultValue, float min, float max, java.util.function.Supplier<Float> getter, java.util.function.Consumer<Float> setter) {
+        return createFloatSliderOption(nameKey, defaultValue, min, max, 0.1f, getter, setter);
+    }
+
+    private static Option<Float> createFloatSliderOption(String nameKey, float defaultValue, float min, float max, float step, java.util.function.Supplier<Float> getter, java.util.function.Consumer<Float> setter) {
         return Option.<Float>createBuilder()
             .name(Component.translatable(nameKey))
             .description(OptionDescription.of(Component.translatable(nameKey + ".description")))
             .binding(defaultValue, getter, setter)
-            .controller(opt -> FloatSliderControllerBuilder.create(opt).range(min, max).step(0.1f))
+            .controller(opt -> FloatSliderControllerBuilder.create(opt).range(min, max).step(step))
             .build();
     }
 
