@@ -63,11 +63,18 @@ public final class FPSRenderer {
 
             // 2. Calculate Dynamic Dimensions
             int maxWidth = client.font.width(avgText);
-            int totalHeight = 10;
+            int textHeight = 10;
 
             if (FPSConfig.getInstance().enableAdvancedStats) {
                 maxWidth = Math.max(maxWidth, client.font.width(lowsText));
-                totalHeight += 10;
+                textHeight += 10;
+            }
+
+            boolean showGraph = FPSConfig.getInstance().enableFrametimeGraph;
+            int totalHeight = textHeight;
+            if (showGraph) {
+                maxWidth = Math.max(maxWidth, FPSConfig.getInstance().graphWidth);
+                totalHeight += 2 + FPSConfig.getInstance().graphHeight;
             }
 
             // 3. Draw Background Box
@@ -88,10 +95,46 @@ public final class FPSRenderer {
                 renderText(context, client.font, lowsText, 0, 10, textColor, scale, useShadow);
             }
 
+            // 5. Draw Frametime Graph
+            if (showGraph) {
+                renderFrametimeGraph(context, textHeight + 2);
+            }
+
             context.pose().popMatrix();
         }
     }
 
+
+    /**
+     * Draws the scrolling frametime bar graph.
+     * Each bar is one pixel wide; height is proportional to frametime clamped to graphMaxMs.
+     * Bars are color-coded: graphColor below 16.7 ms, yellow up to 33.3 ms, red above.
+     *
+     * @param context Graphics context
+     * @param yStart  Y coordinate of the top edge of the graph area
+     */
+    @Unique
+    private static void renderFrametimeGraph(GuiGraphicsExtractor context, int yStart) {
+        FPSConfig cfg = FPSConfig.getInstance();
+        int graphWidth = cfg.graphWidth;
+        int graphHeight = cfg.graphHeight;
+        float maxMs = cfg.graphMaxMs;
+        int goodColor = cfg.graphColor;
+
+        float[] samples = FPSStats.getRecentFrametimes(graphWidth);
+        int yBase = yStart + graphHeight;
+        int xStart = graphWidth - samples.length; // right-align so newest bar is at the right edge
+
+        for (int i = 0; i < samples.length; i++) {
+            float ft = samples[i];
+            int barHeight = (int) Math.min(ft / maxMs * graphHeight, graphHeight);
+            if (barHeight <= 0) continue;
+
+            int x = xStart + i;
+            int color = ft < 16.7f ? goodColor : (ft < 33.3f ? 0xFFFFFF00 : 0xFFFF0000);
+            context.fill(x, yBase - barHeight, x + 1, yBase, color);
+        }
+    }
 
     /**
      * Renders a text string with specified properties onto the GUI graphics context.

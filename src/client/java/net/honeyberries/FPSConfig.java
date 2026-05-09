@@ -63,6 +63,21 @@ public class FPSConfig {
     /** Default: Background color in ARGB format (fully transparent). */
     public static final int DEF_BG_COLOR = 0x00000000;
 
+    /** Default: Enable the scrolling frametime graph. */
+    public static final boolean DEF_ENABLE_FRAMETIME_GRAPH = false;
+
+    /** Default: Width of the frametime graph in pixels. */
+    public static final int DEF_GRAPH_WIDTH = 200;
+
+    /** Default: Height of the frametime graph in pixels. */
+    public static final int DEF_GRAPH_HEIGHT = 40;
+
+    /** Default: Y-axis ceiling of the frametime graph in milliseconds. */
+    public static final float DEF_GRAPH_MAX_MS = 50.0f;
+
+    /** Default: Color for frames under the 60 FPS threshold (green, fully opaque). */
+    public static final int DEF_GRAPH_COLOR = 0xFF00FF00;
+
     // Configuration fields
     /** Whether the FPS display is currently enabled. */
     public boolean enableFps = DEF_ENABLE_FPS;
@@ -90,6 +105,21 @@ public class FPSConfig {
 
     /** Background box color in ARGB format (alpha, red, green, blue). */
     public int bgColor = DEF_BG_COLOR;
+
+    /** Whether to show the scrolling frametime graph below the FPS text. */
+    public boolean enableFrametimeGraph = DEF_ENABLE_FRAMETIME_GRAPH;
+
+    /** Width of the frametime graph in pixels. */
+    public int graphWidth = DEF_GRAPH_WIDTH;
+
+    /** Height of the frametime graph in pixels. */
+    public int graphHeight = DEF_GRAPH_HEIGHT;
+
+    /** Y-axis ceiling of the frametime graph in milliseconds. */
+    public float graphMaxMs = DEF_GRAPH_MAX_MS;
+
+    /** Bar color for frames with good frametime (below ~16.7 ms / 60 FPS threshold). */
+    public int graphColor = DEF_GRAPH_COLOR;
 
     /**
      * Gets the singleton configuration instance.

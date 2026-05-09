@@ -34,5 +34,17 @@
   "config.fpsdisplay.text_color.description": "Color for the text",
 
   "config.fpsdisplay.bg_color": "Background Color",
-  "config.fpsdisplay.bg_color.description": "Color for the background"
+  "config.fpsdisplay.bg_color.description": "Color for the background",
+
+  "config.fpsdisplay.group.frametime_graph": "Frametime Graph",
+  "config.fpsdisplay.enable_frametime_graph": "Enable Frametime Graph",
+  "config.fpsdisplay.enable_frametime_graph.description": "Shows a scrolling RTSS-style frametime bar graph below the FPS text",
+  "config.fpsdisplay.graph_width": "Graph Width",
+  "config.fpsdisplay.graph_width.description": "Width of the frametime graph in pixels",
+  "config.fpsdisplay.graph_height": "Graph Height",
+  "config.fpsdisplay.graph_height.description": "Height of the frametime graph in pixels",
+  "config.fpsdisplay.graph_max_ms": "Graph Max (ms)",
+  "config.fpsdisplay.graph_max_ms.description": "Y-axis ceiling of the graph in milliseconds; bars reaching this height represent the worst frametimes",
+  "config.fpsdisplay.graph_color": "Good Frame Color",
+  "config.fpsdisplay.graph_color.description": "Bar color for frames under 16.7 ms (60 FPS). Frames between 16.7–33.3 ms show yellow, above 33.3 ms show red"
 }
