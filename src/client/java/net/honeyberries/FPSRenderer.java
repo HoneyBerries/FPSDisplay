@@ -127,36 +127,33 @@ public final class FPSRenderer {
 
         for (int i = 0; i < samples.length; i++) {
             float ft = samples[i];
-            int barHeight = (int) Math.min(ft / maxMs * graphHeight, graphHeight);
-            if (barHeight <= 0) continue;
+            int barHeight = Math.round(Math.clamp(ft / maxMs * graphHeight, 1, graphHeight));
 
             int x = xStart + i;
-            int color = ft < 16.7f ? goodColor : (ft < 33.3f ? 0xFFFFFF00 : 0xFFFF0000);
+            int color = ft < cfg.yellowThresholdMs ? goodColor : (ft < cfg.redThresholdMs ? cfg.yellowColor : cfg.redColor);
             context.fill(x, yBase - barHeight, x + 1, yBase, color);
         }
     }
 
     /**
      * Renders a text string with specified properties onto the GUI graphics context.
-     *
+     * <p>
      * This method supports optional scaling and shadow rendering. When scaling is applied,
      * the rendering coordinates are adjusted to account for the transformation.
      *
      * @param graphics The graphics context used for rendering the text*/
     @Unique
     private static void renderText(GuiGraphicsExtractor graphics, Font textRenderer, String text, int x, int y, int color, float scale, boolean shadowed) {
-        if (scale != 1.0f) {
-            Matrix3x2fStack matrixStack = graphics.pose();
-            matrixStack.pushMatrix();
-            matrixStack.translate(x, y);
-            matrixStack.scale(scale, scale);
-            matrixStack.translate(-x, -y);
-            graphics.text(textRenderer, text, x, y, color, shadowed);
-            matrixStack.popMatrix();
-        }
-        else {
-            graphics.text(textRenderer, text, x, y, color, shadowed);
-        }
+        Matrix3x2fStack matrixStack = graphics.pose();
+
+        // Scale without affecting position by translating to the text position, scaling, then translating back
+        matrixStack.pushMatrix();
+        matrixStack.translate(x, y);
+        matrixStack.scale(scale);
+        matrixStack.translate(-x, -y);
+
+        graphics.text(textRenderer, text, x, y, color, shadowed);
+        matrixStack.popMatrix();
     }
 
 

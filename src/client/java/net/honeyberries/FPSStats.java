@@ -39,7 +39,6 @@ public final class FPSStats {
     private static volatile double onePercentFps = 0.0;
     private static volatile double pointOnePercentFps = 0.0;
 
-    private FPSStats() {}
 
     /**
      * Records a new frame and updates statistics if needed.

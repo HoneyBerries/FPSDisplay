@@ -9,7 +9,6 @@ import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.YetAnotherConfigLib;
 import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
 import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
-import dev.isxander.yacl3.api.controller.DoubleSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.FloatSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import net.minecraft.client.gui.screens.Screen;
@@ -18,6 +17,8 @@ import net.minecraft.network.chat.Component;
 import com.mojang.blaze3d.platform.Window;
 
 import java.awt.Color;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * ModMenu integration for FPS Display.
@@ -135,6 +136,26 @@ public class FPSDisplayModMenu implements ModMenuApi {
                         FPSConfig.DEF_GRAPH_COLOR,
                         () -> FPSConfig.getInstance().graphColor,
                         v -> FPSConfig.getInstance().graphColor = v))
+                    .option(createFpsThresholdSliderOption(
+                        "config.fpsdisplay.yellow_threshold_fps",
+                        FPSConfig.DEF_YELLOW_THRESHOLD_MS,
+                            () -> FPSConfig.getInstance().yellowThresholdMs,
+                        v -> FPSConfig.getInstance().yellowThresholdMs = v))
+                    .option(createFpsThresholdSliderOption(
+                        "config.fpsdisplay.red_threshold_fps",
+                        FPSConfig.DEF_RED_THRESHOLD_MS,
+                            () -> FPSConfig.getInstance().redThresholdMs,
+                        v -> FPSConfig.getInstance().redThresholdMs = v))
+                    .option(createColorOption(
+                        "config.fpsdisplay.yellow_color",
+                        FPSConfig.DEF_YELLOW_COLOR,
+                        () -> FPSConfig.getInstance().yellowColor,
+                        v -> FPSConfig.getInstance().yellowColor = v))
+                    .option(createColorOption(
+                        "config.fpsdisplay.red_color",
+                        FPSConfig.DEF_RED_COLOR,
+                        () -> FPSConfig.getInstance().redColor,
+                        v -> FPSConfig.getInstance().redColor = v))
                     .build())
                 .build())
             .category(ConfigCategory.createBuilder()
@@ -142,7 +163,7 @@ public class FPSDisplayModMenu implements ModMenuApi {
                 .option(createFloatSliderOption(
                     "config.fpsdisplay.hud_scale",
                     FPSConfig.DEF_HUD_SCALE,
-                    0.5f, 3.0f,
+                    0.5f, 3.0f, 0.1f,
                     () -> FPSConfig.getInstance().hudScale,
                     v -> FPSConfig.getInstance().hudScale = v))
                 .option(createBoolOption(
@@ -214,26 +235,46 @@ public class FPSDisplayModMenu implements ModMenuApi {
      * Creates a float slider option for the config screen.
      * <p>
      * This helper creates a slider that allows selecting a floating-point value within a specified range.
-     * The slider increments by 0.1 steps.
      *
      * @param nameKey Translation key for the option name (description key is assumed to be {@code nameKey + ".description"})
      * @param defaultValue The default value for this option
      * @param min The minimum allowed value
      * @param max The maximum allowed value
+     * @param step The step increment for the slider
      * @param getter Supplies the current value from the config
      * @param setter Accepts new values to update the config
      * @return A configured float slider option ready to be added to the config screen
      */
-    private static Option<Float> createFloatSliderOption(String nameKey, float defaultValue, float min, float max, java.util.function.Supplier<Float> getter, java.util.function.Consumer<Float> setter) {
-        return createFloatSliderOption(nameKey, defaultValue, min, max, 0.1f, getter, setter);
-    }
-
     private static Option<Float> createFloatSliderOption(String nameKey, float defaultValue, float min, float max, float step, java.util.function.Supplier<Float> getter, java.util.function.Consumer<Float> setter) {
         return Option.<Float>createBuilder()
             .name(Component.translatable(nameKey))
             .description(OptionDescription.of(Component.translatable(nameKey + ".description")))
             .binding(defaultValue, getter, setter)
             .controller(opt -> FloatSliderControllerBuilder.create(opt).range(min, max).step(step))
+            .build();
+    }
+
+    /**
+     * Creates a FPS-based threshold slider that converts to/from milliseconds.
+     * <p>
+     * This helper displays FPS values to the user (e.g., 60 FPS) but stores
+     * the equivalent milliseconds in the config (e.g., 16.7 ms).
+     *
+     * @param nameKey   Translation key for the option name
+     * @param defaultMs The default value in milliseconds
+     * @param getter    Supplies the current value in milliseconds from config
+     * @param setter    Accepts new values in milliseconds to update config
+     * @return A configured FPS slider option ready to be added to the config screen
+     */
+    private static Option<Float> createFpsThresholdSliderOption(String nameKey, float defaultMs, Supplier<Float> getter, Consumer<Float> setter) {
+        float defaultFps = 1000f / defaultMs;
+        return Option.<Float>createBuilder()
+            .name(Component.translatable(nameKey))
+            .description(OptionDescription.of(Component.translatable(nameKey + ".description")))
+            .binding(defaultFps,
+                () -> 1000f / getter.get(),
+                fps -> setter.accept(1000f / fps))
+            .controller(opt -> FloatSliderControllerBuilder.create(opt).range(10f, 240f).step(10f))
             .build();
     }
 

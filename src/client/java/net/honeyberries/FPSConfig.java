@@ -67,16 +67,28 @@ public class FPSConfig {
     public static final boolean DEF_ENABLE_FRAMETIME_GRAPH = false;
 
     /** Default: Width of the frametime graph in pixels. */
-    public static final int DEF_GRAPH_WIDTH = 200;
+    public static final int DEF_GRAPH_WIDTH = 100;
 
     /** Default: Height of the frametime graph in pixels. */
-    public static final int DEF_GRAPH_HEIGHT = 40;
+    public static final int DEF_GRAPH_HEIGHT = 20;
 
     /** Default: Y-axis ceiling of the frametime graph in milliseconds. */
     public static final float DEF_GRAPH_MAX_MS = 50.0f;
 
     /** Default: Color for frames under the 60 FPS threshold (green, fully opaque). */
     public static final int DEF_GRAPH_COLOR = 0xFF00FF00;
+
+    /** Default: Frametime threshold for yellow color in milliseconds (60 FPS). */
+    public static final float DEF_YELLOW_THRESHOLD_MS = ((float) 1000 / 60);
+
+    /** Default: Frametime threshold for red color in milliseconds (30 FPS). */
+    public static final float DEF_RED_THRESHOLD_MS = ((float) 1000 / 30);
+
+    /** Default: Color for frames in the yellow range (yellow, fully opaque). */
+    public static final int DEF_YELLOW_COLOR = 0xFFFFFF00;
+
+    /** Default: Color for frames in the red range (red, fully opaque). */
+    public static final int DEF_RED_COLOR = 0xFFFF0000;
 
     // Configuration fields
     /** Whether the FPS display is currently enabled. */
@@ -120,6 +132,18 @@ public class FPSConfig {
 
     /** Bar color for frames with good frametime (below ~16.7 ms / 60 FPS threshold). */
     public int graphColor = DEF_GRAPH_COLOR;
+
+    /** Frametime threshold (ms) below which bars are green, above which they're yellow. */
+    public float yellowThresholdMs = DEF_YELLOW_THRESHOLD_MS;
+
+    /** Frametime threshold (ms) below which bars are yellow, above which they're red. */
+    public float redThresholdMs = DEF_RED_THRESHOLD_MS;
+
+    /** Bar color for frametimes in the yellow range (yellow warning zone). */
+    public int yellowColor = DEF_YELLOW_COLOR;
+
+    /** Bar color for frametimes in the red range (red critical zone). */
+    public int redColor = DEF_RED_COLOR;
 
     /**
      * Gets the singleton configuration instance.
