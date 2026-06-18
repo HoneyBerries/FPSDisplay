@@ -167,10 +167,9 @@ public final class FPSRenderer {
      */
     public static boolean shouldShowHUD() {
         Minecraft client = Minecraft.getInstance();
-        // Logic: Don't hide if (F1 is pressed AND I am NOT a spectator)
-        boolean hideGuiCheck = !(client.options.hideGui);
+        boolean hideGuiCheck = !client.gui.hud.isHidden();
 
-        return !(client.screen instanceof LevelLoadingScreen) &&
+        return !(client.gui.screen() instanceof LevelLoadingScreen) &&
                hideGuiCheck &&
                !client.getDebugOverlay().showDebugScreen();
     }
