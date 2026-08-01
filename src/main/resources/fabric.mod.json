@@ -15,9 +15,6 @@
 	"icon": "assets/fpsdisplay/icon.png",
 	"environment": "client",
 	"entrypoints": {
-		"main": [
-			"net.honeyberries.FPSDisplay"
-		],
 		"client": [
 			"net.honeyberries.FPSDisplayClient"
 		],
@@ -26,7 +23,6 @@
 		]
 	},
 	"mixins": [
-      "fpsdisplay.mixins.json",
       "fpsdisplay.client.mixins.json"
 	],
 	"depends": {

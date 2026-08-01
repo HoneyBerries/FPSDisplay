@@ -1,14 +1,11 @@
 package net.honeyberries;
 
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.LevelLoadingScreen;
 import org.joml.Matrix3x2fStack;
 import org.spongepowered.asm.mixin.Unique;
-
-import java.util.Objects;
 
 /**
  * Handles rendering of the FPS display HUD element on screen.
@@ -37,9 +34,10 @@ public final class FPSRenderer {
      * All positioning, scaling, and colors are controlled by FPSConfig.getInstance().
      *
      * @param context The GuiGraphics context for rendering
-     * @param delta Delta tracker for frame timing (unused in current implementation)
+     * @param isHidden Whether the vanilla HUD is currently hidden (F1), read directly off the
+     *                 {@code Hud} instance being rendered so it can't desync from another mod's view of it
      */
-    public static void render(GuiGraphicsExtractor context, DeltaTracker delta) {
+    public static void render(GuiGraphicsExtractor context, boolean isHidden) {
         Minecraft client = Minecraft.getInstance();
 
         // Use the Singleton Instance for the toggle check
@@ -51,7 +49,7 @@ public final class FPSRenderer {
         boolean showFpsText = FPSConfig.getInstance().showFpsText;
 
         // Respect F3 and other debug overlays
-        if (shouldShowHUD()) {
+        if (shouldShowHUD(isHidden)) {
             context.pose().pushMatrix();
 
             // 1. Position and Scale using Singleton values
@@ -161,16 +159,21 @@ public final class FPSRenderer {
      * This method checks:
      <p> 1. If the current screen is a LevelLoadingScreen (don't show HUD during loading)
      <p> 2. If the player's GUI is hidden (don't show HUD if GUI is hidden)
-     <p> 3. If the debug overlay is active (don't show HUD when the F3 debug screen is open)
+     <p> 3. If the F3 debug overlay is open (don't show HUD when the F3 debug screen is open)
      *
+     * @param isHidden Whether the vanilla HUD is currently hidden (F1)
      * @return true if the HUD should be shown, false otherwise
      */
-    public static boolean shouldShowHUD() {
+    public static boolean shouldShowHUD(boolean isHidden) {
         Minecraft client = Minecraft.getInstance();
-        boolean hideGuiCheck = !client.gui.hud.isHidden();
 
+        // Note: DebugScreenOverlay#showDebugScreen() also returns true whenever ANY individual
+        // debug entry is set to "always on" (persisted in debug-profile.json), not just when F3
+        // is actually open. That made the HUD silently vanish the moment any debug entry got
+        // toggled on, with nothing in the log. debugEntries.isOverlayVisible() reflects only the
+        // F3 screen's own open/closed state, matching what a user would expect "F3 is open" to mean.
         return !(client.gui.screen() instanceof LevelLoadingScreen) &&
-               hideGuiCheck &&
-               !client.getDebugOverlay().showDebugScreen();
+               !isHidden &&
+               !client.debugEntries.isOverlayVisible();
     }
 }
