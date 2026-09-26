@@ -6,7 +6,6 @@ import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.resources.Identifier;
 import com.mojang.blaze3d.platform.InputConstants;
-import org.lwjgl.glfw.GLFW;
 
 /**
  * Client-side initialization for the FPS Display mod.
@@ -30,8 +29,8 @@ public class FPSDisplayClient implements ClientModInitializer {
 
         TOGGLE_HUD_KEY = KeyMappingHelper.registerKeyMapping(new KeyMapping(
             "key.fpsdisplay.toggle_hud",
-            InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
+            InputConstants.Type.KEYBOARD,
+            InputConstants.UNKNOWN.getValue(),
             fpsdisplayCategory
         ));
 
