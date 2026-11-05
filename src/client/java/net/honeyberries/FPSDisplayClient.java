@@ -1,6 +1,7 @@
 package net.honeyberries;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.honeyberries.config.FPSDisplayConfig;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.minecraft.client.KeyMapping;
@@ -21,7 +22,7 @@ public class FPSDisplayClient implements ClientModInitializer {
      */
     @Override
     public void onInitializeClient() {
-        FPSConfig.load();
+        FPSDisplayConfig.HANDLER.load();
 
         KeyMapping.Category fpsdisplayCategory = KeyMapping.Category.register(
             Identifier.fromNamespaceAndPath(FPSDisplay.MOD_ID, "keybinds")
@@ -36,8 +37,8 @@ public class FPSDisplayClient implements ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (TOGGLE_HUD_KEY.consumeClick()) {
-                FPSConfig.getInstance().enableFps = !FPSConfig.getInstance().enableFps;
-                FPSConfig.save();
+                FPSDisplayConfig.config().enableFps = !FPSDisplayConfig.config().enableFps;
+                FPSDisplayConfig.saveAsync();
             }
         });
     }

@@ -19,7 +19,7 @@
 			"net.honeyberries.FPSDisplayClient"
 		],
 		"modmenu": [
-			"net.honeyberries.FPSDisplayModMenu"
+			"net.honeyberries.config.FPSDisplayModMenu"
 		]
 	},
 	"mixins": [

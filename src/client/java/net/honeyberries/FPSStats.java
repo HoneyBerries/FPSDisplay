@@ -1,5 +1,7 @@
 package net.honeyberries;
 
+import net.minecraft.network.chat.Component;
+
 import java.util.Arrays;
 
 /**
@@ -62,15 +64,15 @@ public final class FPSStats {
     /** Formatted average FPS string, optionally prefixed with "FPS: ". */
     public static String getDisplayStringAvg(boolean showFpsText) {
         return showFpsText
-                ? String.format("FPS: %.0f", avgFps)
+                ? Component.translatable("text.fpsdisplay.fps", String.format("%.0f", avgFps)).getString()
                 : String.format("%.0f", avgFps);
     }
 
     /** Formatted 1% / 0.1% low FPS string. */
     public static String getDisplayStringLows() {
-        return String.format("1%% Low: %.0f | 0.1%% Low: %.0f",
-                Math.max(0.0, onePercentFps),
-                Math.max(0.0, pointOnePercentFps));
+        return Component.translatable("text.fpsdisplay.lows",
+                String.format("%.0f", Math.max(0.0, onePercentFps)),
+                String.format("%.0f", Math.max(0.0, pointOnePercentFps))).getString();
     }
 
     /**

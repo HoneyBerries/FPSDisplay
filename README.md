@@ -5,7 +5,7 @@ A lightweight, highly customizable Minecraft Fabric mod that displays real-time 
 [![Build](https://img.shields.io/github/actions/workflow/status/HoneyBerries/FPSDisplay/.github/workflows/build.yml?branch=dev&label=build&logo=github)](https://github.com/HoneyBerries/FPSDisplay/actions)
 [![Release](https://img.shields.io/github/v/release/HoneyBerries/FPSDisplay?color=brightgreen&logo=github)](https://github.com/HoneyBerries/FPSDisplay/releases)
 [![License](https://img.shields.io/badge/license-GPL--3.0-blue.svg)](LICENSE)
-[![Minecraft](https://img.shields.io/badge/Minecraft-26.1.2-green.svg)](https://www.minecraft.net/)
+[![Minecraft](https://img.shields.io/badge/Minecraft-26.3-green.svg)](https://www.minecraft.net/)
 [![Fabric](https://img.shields.io/badge/Loader-Fabric-orange.svg)](https://fabricmc.net/)
 
 ## 📖 Table of Contents
@@ -23,7 +23,7 @@ A lightweight, highly customizable Minecraft Fabric mod that displays real-time 
 - **Average FPS**: Real-time frames per second calculation
 - **1% Low FPS**: Average FPS of the slowest 1% of frames
 - **0.1% Low FPS**: Average FPS of the slowest 0.1% of frames
-- **Rolling Window**: 2-second time window for smooth, accurate statistics
+- **Rolling Window**: 5-second time window for smooth, accurate statistics
 - **Efficient Implementation**: Ring buffer with minimal CPU overhead
 
 ### Customization Options
@@ -43,19 +43,19 @@ A lightweight, highly customizable Minecraft Fabric mod that displays real-time 
 ## 📦 Installation
 
 ### Requirements
-- **Minecraft**: 26.1.2 (exact version)
+- **Minecraft**: 26.3 (exact version)
 - **Fabric Loader**: 0.19.2 or newer
-- **Java**: 21 or newer
-- **Fabric API**: 0.148.0+ for Minecraft 26.1.2
-- **YACL3 (Yet Another Config Lib)**: 3.9.3+26.1-fabric or newer (required for configuration GUI)
-- **ModMenu**: 18.0.0-alpha.8 or newer (required for config access)
+- **Java**: 25 or newer
+- **Fabric API**: 0.165.0+ for Minecraft 26.3
+- **YACL3 (Yet Another Config Lib)**: 3.9.7+26.3-fabric or newer (required for configuration GUI)
+- **ModMenu**: 21.0.0 or newer (required for config access)
 
 ### Quick Installation Steps
-1. Install [Fabric Loader](https://fabricmc.net/use/) for Minecraft 26.1.2
+1. Install [Fabric Loader](https://fabricmc.net/use/) for Minecraft 26.3
 2. Download the following mods from [Modrinth](https://modrinth.com):
-   - [Fabric API](https://modrinth.com/mod/fabric-api/versions?g=26.1.2)
-   - [YACL3](https://modrinth.com/mod/yacl/versions?g=26.1.2)
-   - [ModMenu](https://modrinth.com/mod/modmenu/versions?g=26.1.2)
+   - [Fabric API](https://modrinth.com/mod/fabric-api/versions?g=26.3)
+   - [YACL3](https://modrinth.com/mod/yacl/versions?g=26.3)
+   - [ModMenu](https://modrinth.com/mod/modmenu/versions?g=26.3)
 3. Place all downloaded `.jar` files in your `.minecraft/mods` folder
 4. Download the [latest FPS Display release](https://github.com/HoneyBerries/FPSDisplay/releases/latest) and place in your `mods` folder
 5. Launch Minecraft
@@ -94,7 +94,7 @@ Access the configuration screen through **ModMenu**:
 - **Text Color**: RGBA color picker for the FPS text
 - **Background Color**: RGBA color picker for the background box (alpha controls transparency)
 
-All settings are saved to `config/fps_display_config.json` and persist across game sessions.
+All settings are saved to `config/fpsdisplay.json` and persist across game sessions.
 
 ## 🛠️ Development
 

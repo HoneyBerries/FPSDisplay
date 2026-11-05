@@ -1,10 +1,10 @@
 package net.honeyberries;
 
+import net.honeyberries.config.FPSDisplayConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.LevelLoadingScreen;
-import org.joml.Matrix3x2fStack;
 import org.spongepowered.asm.mixin.Unique;
 
 /**
@@ -31,7 +31,7 @@ public final class FPSRenderer {
      * 5. Draws FPS text with shadow (if enabled)
      * 6. Draws advanced statistics (if enabled)
      * <p>
-     * All positioning, scaling, and colors are controlled by FPSConfig.getInstance().
+     * All positioning, scaling, and colors are controlled by FPSDisplayConfig.config().
      *
      * @param context The GuiGraphics context for rendering
      * @param isHidden Whether the vanilla HUD is currently hidden (F1), read directly off the
@@ -40,21 +40,21 @@ public final class FPSRenderer {
     public static void render(GuiGraphicsExtractor context, boolean isHidden) {
         Minecraft client = Minecraft.getInstance();
 
-        // Use the Singleton Instance for the toggle check
-        if (!FPSConfig.getInstance().enableFps) return;
+        FPSDisplayConfig cfg = FPSDisplayConfig.config();
+        if (!cfg.enableFps) return;
 
         // Record stats
         FPSStats.recordFrame(System.nanoTime());
 
-        boolean showFpsText = FPSConfig.getInstance().showFpsText;
+        boolean showFpsText = cfg.showFpsText;
 
         // Respect F3 and other debug overlays
         if (shouldShowHUD(isHidden)) {
             context.pose().pushMatrix();
 
             // 1. Position and Scale using Singleton values
-            context.pose().translate(FPSConfig.getInstance().xOffset, FPSConfig.getInstance().yOffset);
-            context.pose().scale(FPSConfig.getInstance().hudScale);
+            context.pose().translate(cfg.xOffset, cfg.yOffset);
+            context.pose().scale(cfg.hudScale);
 
             String avgText = FPSStats.getDisplayStringAvg(showFpsText);
             String lowsText = FPSStats.getDisplayStringLows();
@@ -63,34 +63,33 @@ public final class FPSRenderer {
             int maxWidth = client.font.width(avgText);
             int textHeight = 10;
 
-            if (FPSConfig.getInstance().enableAdvancedStats) {
+            if (cfg.enableAdvancedStats) {
                 maxWidth = Math.max(maxWidth, client.font.width(lowsText));
                 textHeight += 10;
             }
 
-            boolean showGraph = FPSConfig.getInstance().enableFrametimeGraph;
+            boolean showGraph = cfg.enableFrametimeGraph;
             int totalHeight = textHeight;
             if (showGraph) {
-                maxWidth = Math.max(maxWidth, FPSConfig.getInstance().graphWidth);
-                totalHeight += 2 + FPSConfig.getInstance().graphHeight;
+                maxWidth = Math.max(maxWidth, cfg.graphWidth);
+                totalHeight += 2 + cfg.graphHeight;
             }
 
             // 3. Draw Background Box
             // Extracting alpha from the singleton's bgColor
-            int bgColor = FPSConfig.getInstance().bgColor;
+            int bgColor = cfg.bgColor.getRGB();
             if (((bgColor >> 24) & 0xFF) > 0) {
                 context.fill(-2, -2, maxWidth + 2, totalHeight, bgColor);
             }
 
             // 4. Draw Strings using singleton settings
-            int textColor = FPSConfig.getInstance().hudColor;
-            float scale = FPSConfig.getInstance().hudScale;
-            boolean useShadow = FPSConfig.getInstance().enableShadow;
+            int textColor = cfg.hudColor.getRGB();
+                        boolean useShadow = cfg.enableShadow;
 
-            renderText(context, client.font, avgText, 0, 0, textColor, scale, useShadow);
+            renderText(context, client.font, avgText, 0, 0, textColor, useShadow);
 
-            if (FPSConfig.getInstance().enableAdvancedStats) {
-                renderText(context, client.font, lowsText, 0, 10, textColor, scale, useShadow);
+            if (cfg.enableAdvancedStats) {
+                renderText(context, client.font, lowsText, 0, 10, textColor, useShadow);
             }
 
             // 5. Draw Frametime Graph
@@ -113,11 +112,15 @@ public final class FPSRenderer {
      */
     @Unique
     private static void renderFrametimeGraph(GuiGraphicsExtractor context, int yStart) {
-        FPSConfig cfg = FPSConfig.getInstance();
+        FPSDisplayConfig cfg = FPSDisplayConfig.config();
         int graphWidth = cfg.graphWidth;
         int graphHeight = cfg.graphHeight;
         float maxMs = cfg.graphMaxMs;
-        int goodColor = cfg.graphColor;
+        int goodColor = cfg.graphColor.getRGB();
+        float yellowMs = cfg.yellowThresholdMs();
+        float redMs = cfg.redThresholdMs();
+        int yellowColor = cfg.yellowColor.getRGB();
+        int redColor = cfg.redColor.getRGB();
 
         float[] samples = FPSStats.getRecentFrametimes(graphWidth);
         int yBase = yStart + graphHeight;
@@ -128,30 +131,18 @@ public final class FPSRenderer {
             int barHeight = Math.round(Math.clamp(ft / maxMs * graphHeight, 1, graphHeight));
 
             int x = xStart + i;
-            int color = ft < cfg.yellowThresholdMs ? goodColor : (ft < cfg.redThresholdMs ? cfg.yellowColor : cfg.redColor);
+            int color = ft < yellowMs ? goodColor : (ft < redMs ? yellowColor : redColor);
             context.fill(x, yBase - barHeight, x + 1, yBase, color);
         }
     }
 
     /**
-     * Renders a text string with specified properties onto the GUI graphics context.
-     * <p>
-     * This method supports optional scaling and shadow rendering. When scaling is applied,
-     * the rendering coordinates are adjusted to account for the transformation.
-     *
-     * @param graphics The graphics context used for rendering the text*/
+     * Renders a text string at the given position. Scaling is already applied by the caller's
+     * pose transform, so no extra scale is applied here.
+     */
     @Unique
-    private static void renderText(GuiGraphicsExtractor graphics, Font textRenderer, String text, int x, int y, int color, float scale, boolean shadowed) {
-        Matrix3x2fStack matrixStack = graphics.pose();
-
-        // Scale without affecting position by translating to the text position, scaling, then translating back
-        matrixStack.pushMatrix();
-        matrixStack.translate(x, y);
-        matrixStack.scale(scale);
-        matrixStack.translate(-x, -y);
-
+    private static void renderText(GuiGraphicsExtractor graphics, Font textRenderer, String text, int x, int y, int color, boolean shadowed) {
         graphics.text(textRenderer, text, x, y, color, shadowed);
-        matrixStack.popMatrix();
     }
 
 
