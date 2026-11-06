@@ -55,22 +55,24 @@ public class FPSDisplayConfig {
     }
 
     private static final String GENERAL = "general";
-    private static final String APPEARANCE = "appearance";
 
     // ── HUD ───────────────────────────────────────────────────────────────────
 
     @SerialEntry
-    @AutoGen(category = GENERAL, group = "hud")
-    @TickBox
+    @AutoGen(category = GENERAL)
+    @MasterTickBox({"enableAdvancedStats", "showFpsText", "xOffset", "yOffset",
+            "enableFrametimeGraph", "graphWidth", "graphHeight", "graphMaxMs", "graphColor",
+            "yellowThresholdFps", "redThresholdFps", "yellowColor", "redColor",
+            "hudScale", "enableShadow", "hudColor", "bgColor"})
     public boolean enableFps = true;
 
     @SerialEntry
-    @AutoGen(category = GENERAL, group = "hud")
+    @AutoGen(category = GENERAL)
     @TickBox
     public boolean enableAdvancedStats = false;
 
     @SerialEntry
-    @AutoGen(category = GENERAL, group = "hud")
+    @AutoGen(category = GENERAL)
     @TickBox
     public boolean showFpsText = true;
 
@@ -134,25 +136,25 @@ public class FPSDisplayConfig {
     @ColorField(allowAlpha = true)
     public Color redColor = new Color(0xFFFF0000, true);
 
-    // ── Text appearance ───────────────────────────────────────────────────────
+    // ── Text ──────────────────────────────────────────────────────────────────
 
     @SerialEntry
-    @AutoGen(category = APPEARANCE, group = "text")
+    @AutoGen(category = GENERAL)
     @FloatSlider(min = 0.5f, max = 3.0f, step = 0.1f, format = "%.1f")
     public float hudScale = 1.0f;
 
     @SerialEntry
-    @AutoGen(category = APPEARANCE, group = "text")
+    @AutoGen(category = GENERAL)
     @TickBox
     public boolean enableShadow = false;
 
     @SerialEntry
-    @AutoGen(category = APPEARANCE, group = "text")
+    @AutoGen(category = GENERAL)
     @ColorField(allowAlpha = true)
     public Color hudColor = new Color(0xFFFFFFFF, true);
 
     @SerialEntry
-    @AutoGen(category = APPEARANCE, group = "text")
+    @AutoGen(category = GENERAL)
     @ColorField(allowAlpha = true)
     public Color bgColor = new Color(0x00000000, true);
 }

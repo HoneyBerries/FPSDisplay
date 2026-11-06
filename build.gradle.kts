@@ -104,15 +104,17 @@ val checkConfigLangKeys by tasks.registering {
 		val src = configSrc.readText()
 		val lang = langFile.readText()
 		val prefix = "yacl3.config.fpsdisplay:config."
-		val categories = mapOf("GENERAL" to "general", "APPEARANCE" to "appearance")
-		val fieldRegex = Regex("""@AutoGen\(category\s*=\s*(\w+),\s*group\s*=\s*"(\w+)"\)[^;]*?public\s+\w+\s+(\w+)\s*=""")
+		val categories = mapOf("GENERAL" to "general")
+		val fieldRegex = Regex("""@AutoGen\(category\s*=\s*(\w+)(?:,\s*group\s*=\s*"(\w+)")?\)[^;]*?public\s+\w+\s+(\w+)\s*=""")
 		val required = linkedSetOf<String>()
 		val fields = mutableSetOf<String>()
 		for (m in fieldRegex.findAll(src)) {
 			val cat = categories[m.groupValues[1]] ?: m.groupValues[1].lowercase()
 			required += "${prefix}category.$cat"
-			required += "${prefix}category.$cat.group.${m.groupValues[2]}"
-			required += "${prefix}category.$cat.group.${m.groupValues[2]}.desc"
+			if (m.groupValues[2].isNotEmpty()) {
+				required += "${prefix}category.$cat.group.${m.groupValues[2]}"
+				required += "${prefix}category.$cat.group.${m.groupValues[2]}.desc"
+			}
 			required += "$prefix${m.groupValues[3]}"
 			required += "$prefix${m.groupValues[3]}.desc"
 			fields += m.groupValues[3]
