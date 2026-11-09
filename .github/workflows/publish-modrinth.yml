@@ -1,4 +1,4 @@
-name: Publish to Modrinth
+name: Publish
 
 on:
   push:
@@ -45,11 +45,14 @@ jobs:
           echo "release_type=$RELEASE_TYPE" >> $GITHUB_OUTPUT
           echo "Mod version: $MOD_VERSION, MC version: $MINECRAFT_VERSION, Release type: $RELEASE_TYPE"
 
-      - name: Publish to Modrinth
+      - name: Publish to Modrinth and CurseForge
         uses: Kir-Antipov/mc-publish@v3
         with:
           modrinth-id: hKRDgptX
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+
+          curseforge-id: 1439343
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
 
           name: FPS Display ${{ steps.version_info.outputs.mod_version }}
           version: ${{ steps.version_info.outputs.mod_version }}
