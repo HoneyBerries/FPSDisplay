@@ -5,6 +5,7 @@ import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import dev.isxander.yacl3.config.v2.api.autogen.AutoGen;
 import dev.isxander.yacl3.config.v2.api.autogen.ColorField;
 import dev.isxander.yacl3.config.v2.api.autogen.FloatSlider;
+import dev.isxander.yacl3.config.v2.api.autogen.IntField;
 import dev.isxander.yacl3.config.v2.api.autogen.IntSlider;
 import dev.isxander.yacl3.config.v2.api.autogen.MasterTickBox;
 import dev.isxander.yacl3.config.v2.api.autogen.TickBox;
@@ -80,12 +81,12 @@ public class FPSDisplayConfig {
 
     @SerialEntry
     @AutoGen(category = GENERAL, group = "positioning")
-    @IntSlider(min = 0, max = 200, step = 1)
+    @IntField(min = 0)
     public int xOffset = 2;
 
     @SerialEntry
     @AutoGen(category = GENERAL, group = "positioning")
-    @IntSlider(min = 0, max = 200, step = 1)
+    @IntField(min = 0)
     public int yOffset = 2;
 
     // ── Frametime graph ───────────────────────────────────────────────────────
